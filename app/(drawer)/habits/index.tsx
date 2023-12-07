@@ -23,6 +23,7 @@ import { Modal } from "react-native";
 
 export default function HabitsPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editHabit, setEditHabit] = useState();
   const layout = useWindowDimensions();
   const [filters, setFilters] = useState([
     {
@@ -35,11 +36,6 @@ export default function HabitsPage() {
       active: false,
       id: "231",
     },
-    {
-      name: "Sport",
-      active: false,
-      id: "319",
-    },
   ]);
   const [habits, setHabits] = useState<IHabit[]>([
     {
@@ -51,6 +47,7 @@ export default function HabitsPage() {
       name: "dsadsa well",
       status: false,
       id: "2213",
+      type: "Daily",
     },
     {
       name: "gfdfgd well",
@@ -61,21 +58,23 @@ export default function HabitsPage() {
       name: "Eaasdasdt well",
       status: false,
       id: "931",
+      type: "Daily",
     },
     {
       name: "asdaswe well",
       status: false,
       id: "3019",
+      type: "Daily",
     },
   ]);
   const [index, setIndex] = useState(0);
+  const [visibleHabits, setVisibleHabits] = useState(habits);
 
   const onHabitDelete = (id: string) => {
     setHabits(habits.filter((item) => item.id !== id));
   };
 
   const onHabitClick = (id: string) => {
-    console.log(habits.find((item) => item.id === id));
     setHabits(() =>
       habits.map((habit) => {
         if (habit.id === id) {
@@ -89,16 +88,51 @@ export default function HabitsPage() {
         return habit;
       })
     );
-    console.log("habitsChange");
   };
 
   const onAddClick = () => {
+    setEditHabit(undefined);
     setIsModalVisible(true);
   };
 
   useEffect(() => {
     console.log("modal update");
   }, [isModalVisible]);
+
+  useEffect(() => {
+    setVisibleHabits(habits);
+  }, [habits]);
+
+  const onEditModalClick = (habit: IHabit) => {
+    setEditHabit(habit);
+    setIsModalVisible(true);
+  };
+
+  const setVisibilityByFilter = (name: string) => {
+    console.log(name);
+    if (name === "All") {
+      setVisibleHabits(habits);
+    } else {
+      setVisibleHabits(visibleHabits.filter((item) => item.type === name));
+    }
+  };
+
+  const onSubmitEditModal = useCallback(
+    (habit: IHabit) => {
+      console.log(habit, "editModalClicked");
+      console.log(habits.find((item) => item.id === habit.id));
+      setHabits(
+        habits.map((item) => {
+          if (item.id === habit.id) {
+            return habit;
+          }
+          return item;
+        })
+      );
+      setIsModalVisible(false);
+    },
+    [habits]
+  );
 
   const onSubmitAddHabitClick = useCallback(
     (habit: {
@@ -107,16 +141,20 @@ export default function HabitsPage() {
       description: string;
       status: boolean;
     }) => {
+      console.log(habit);
       setHabits([...habits, habit]);
       setIsModalVisible(false);
     },
-    []
+    [habits]
   );
-  const onFilterClick = (id: string) => {
-    console.log(id);
+  const onFilterClick = (filter: {
+    id: string;
+    active: boolean;
+    title: string;
+  }) => {
     setFilters(() =>
       filters.map((item) => {
-        if (item.id === id) {
+        if (item.id === filter.id) {
           return {
             name: item.name,
             active: true,
@@ -130,6 +168,7 @@ export default function HabitsPage() {
         };
       })
     );
+    setVisibilityByFilter(filter.title);
   };
 
   return (
@@ -183,15 +222,17 @@ export default function HabitsPage() {
           </Pressable>
         </View>
         <View style={styles.habitList}>
-          {habits.map((item) => {
+          {visibleHabits.map((item) => {
             return (
               <Habit
                 key={item.id}
                 id={item.id}
                 title={item.name}
                 status={item.status}
+                description={item.description}
                 setStatus={onHabitClick}
                 onDelete={onHabitDelete}
+                onEdit={onEditModalClick}
               />
             );
           })}
@@ -218,7 +259,11 @@ export default function HabitsPage() {
         presentationStyle="formSheet"
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <AddModal onAddModalClick={(habit) => onSubmitAddHabitClick(habit)} />
+        <AddModal
+          onAddModalClick={(habit) => onSubmitAddHabitClick(habit)}
+          onEditModal={onSubmitEditModal}
+          editHabit={editHabit}
+        />
       </Modal>
     </>
   );

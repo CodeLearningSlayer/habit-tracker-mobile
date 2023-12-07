@@ -58,9 +58,13 @@ export interface IEpisode {
   show: string;
 }
 
+export type IFilter = "Daily";
+
 export interface IHabit {
   status: boolean;
   description?: string;
   name: string;
+  title?: string;
   id: string;
+  type?: IFilter;
 }

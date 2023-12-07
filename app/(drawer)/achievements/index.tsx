@@ -1,18 +1,19 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import React from "react";
-import Drawer from "expo-router/drawer";
-import Header from "../../../components/Header";
-import { challenges } from "@/constants/data/challenges";
-import Challenge from "@/components/ChallengeItem/Challenge";
+import { achievements } from "@/constants/data/achievements";
+import Achievement from "@/components/Achievement/Achievement";
 
-export default function SettingsPage() {
+const index = () => {
   return (
-    <ScrollView style={styles.mainView} contentContainerStyle={styles.container}>
-      <Text style={styles.challengesTitle}>Челленджи</Text>
+    <ScrollView
+      style={styles.mainView}
+      contentContainerStyle={styles.container}
+    >
+      <Text style={styles.challengesTitle}>Мои достижения</Text>
       <View style={styles.itemsWrapper}>
-        {challenges.map((item, index) => {
+        {achievements.map((item, index) => {
           return (
-            <Challenge
+            <Achievement
               img={item.img}
               name={item.name}
               sub={item.sub}
@@ -23,7 +24,7 @@ export default function SettingsPage() {
       </View>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainView: {
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 30,
     marginBottom: 24,
-    fontWeight: "600"
+    fontWeight: "600",
   },
   itemsWrapper: {
     display: "flex",
@@ -49,3 +50,5 @@ const styles = StyleSheet.create({
     gap: 15,
   },
 });
+
+export default index;

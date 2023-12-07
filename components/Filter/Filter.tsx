@@ -15,7 +15,11 @@ const Filter = ({
   return (
     <Pressable
       style={[styles.filter, active && styles.activeFilter]}
-      onPress={() => onClick(id)}
+      onPress={() => onClick({
+        id,
+        title,
+        active
+      })}
     >
       <View>
         <Text style={styles.text}>{title}</Text>

@@ -8,13 +8,18 @@ export default function HabitItem({
   title,
   status,
   id,
+  description,
   setStatus,
   onDelete,
+  onEdit,
 }: {
   title: string;
   status: boolean;
+  description: string;
+  id: string;
   setStatus: Function;
   onDelete: Function;
+  onEdit: Function;
 }) {
   const onCheckboxClick = () => {
     setStatus(id);
@@ -31,7 +36,17 @@ export default function HabitItem({
         )}
         <Text style={[styles.text, status && styles.textOver]}>{title}</Text>
       </Pressable>
-      <Pressable style={styles.habitOption}>
+      <Pressable
+        style={styles.habitOption}
+        onPress={() =>
+          onEdit({
+            title,
+            status,
+            id,
+            description,
+          })
+        }
+      >
         <EditIcon />
       </Pressable>
       <Pressable style={styles.habitOption} onPress={() => onDelete(id)}>

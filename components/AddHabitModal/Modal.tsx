@@ -1,22 +1,42 @@
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DismissKeyboard from "@/components/DismissKeyboardInput/DismissKeyboard";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { IHabit } from "@/constants/types";
 
-const AddModal = ({ onAddModalClick }: { onAddModalClick: any }) => {
+const AddModal = ({
+  onAddModalClick,
+  onEditModal,
+  editHabit,
+}: {
+  onAddModalClick: any;
+  onEditModal: any;
+  editHabit: IHabit;
+}) => {
   const [habitName, setHabitName] = useState("");
   const [habitDescription, setHabitDescription] = useState("");
   const [habitID, setHabitID] = useState(uuidv4());
 
+  console.log("rerender");
+
   const onNameInput = (name: string) => {
-    setHabitName(name);
     console.log("nameInput", name);
+    setHabitName(name);
   };
 
   const onDescriptionInput = (name: string) => {
     setHabitDescription(name);
   };
+
+  useEffect(() => {
+    console.log(editHabit);
+    if (editHabit) {
+      console.log("edit habit there", editHabit.title);
+      onNameInput(editHabit.title);
+      onDescriptionInput(editHabit.description);
+    }
+  }, []);
 
   return (
     <DismissKeyboard>
@@ -26,28 +46,44 @@ const AddModal = ({ onAddModalClick }: { onAddModalClick: any }) => {
         <TextInput
           style={styles.textInput}
           onChangeText={onNameInput}
-          value={habitName}
+          defaultValue={habitName}
         ></TextInput>
-        <Text style={styles.inputLabel}>Название привычки</Text>
+        <Text style={styles.inputLabel}>Описание привычки</Text>
         <TextInput
           style={[styles.textInput, styles.textArea]}
           onChangeText={onDescriptionInput}
           multiline={true}
-          value={habitDescription}
+          defaultValue={habitDescription}
         ></TextInput>
-        <Pressable
-          style={styles.addHabitBtn}
-          onPress={() =>
-            onAddModalClick({
-              id: habitID,
-              name: habitName,
-              description: habitDescription,
-              status: false,
-            })
-          }
-        >
-          <Text style={styles.habitBtnText}>Создать привычку</Text>
-        </Pressable>
+        {!editHabit ? (
+          <Pressable
+            style={styles.addHabitBtn}
+            onPress={() =>
+              onAddModalClick({
+                id: habitID,
+                name: habitName,
+                description: habitDescription,
+                status: false,
+              })
+            }
+          >
+            <Text style={styles.habitBtnText}>Создать привычку</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            style={styles.addHabitBtn}
+            onPress={() =>
+              onEditModal({
+                id: editHabit.id,
+                name: habitName,
+                description: habitDescription,
+                status: false,
+              })
+            }
+          >
+            <Text style={styles.habitBtnText}>Изменить привычку</Text>
+          </Pressable>
+        )}
       </View>
     </DismissKeyboard>
   );
