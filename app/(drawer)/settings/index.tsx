@@ -8,7 +8,7 @@ export default function SettingsPage() {
     <View>
       <Drawer.Screen
         options={{
-          title: "Настройки",
+          title: "Челленджи",
           headerShown: true,
           header: (props) => <Header {...props} isDrawer={false} />,
         }}

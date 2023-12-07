@@ -12,7 +12,9 @@ export default function Layout() {
           title: "",
           headerShown: true,
           headerTransparent: true,
-          header: (props) => <Header {...props} isDrawer={false} isTransparent />,
+          header: (props) => (
+            <Header {...props} isDrawer={false} isTransparent />
+          ),
         }}
       />
     </Stack>

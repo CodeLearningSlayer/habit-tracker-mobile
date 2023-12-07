@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import CardSmall from "@/components/cards/CardSmall";
+import CardSmall from "@/components/HabitItem/Habit";
 import { ICardSmall } from "@/constants/types";
 
 export default function InfoBlock({ title, items }: { title: string; items: ICardSmall[] }) {
@@ -20,7 +20,6 @@ export default function InfoBlock({ title, items }: { title: string; items: ICar
           return (
             <CardSmall
               key={el.id}
-              image={el.image.medium}
               link={`show/${el.id}/`}
               user={el.user ? el.user : null}
             />
